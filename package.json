@@ -1,0 +1,32 @@
+{
+  "name": "node-red-contrib-enocean-esp2",
+  "version": "0.0.1",
+  "description": "Node, that reads data from enocean serial bus 2 (f.e. eltako) and parses values",
+  "main": "enocean-esp2.js",
+  "dependencies": {
+    "enocean-esp2": "0.0.1",
+    "serialport": "^6.2.0"
+  },
+  "keywords": [
+    "node-red",
+    "enocean",
+    "esp2"
+  ],
+  "node-red": {
+    "nodes": {
+      "enocean-esp2": "enocean-esp2.js",
+      "enocean-esp2-connection": "enocean-esp2-connection.js"
+    }
+  },
+  "author": "Sebastian Balling",
+  "license": "MIT",
+  "email": "coolchip@gmx.de",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/coolchip/node-red-contrib-enocean-esp2"
+  },
+  "bugs": {
+    "url": "https://github.com/coolchip/node-red-contrib-enocean-esp2/issues"
+  },
+  "homepage": "https://github.com/coolchip/node-red-contrib-enocean-esp2#readme"
+}
