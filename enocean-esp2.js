@@ -12,20 +12,24 @@ const processChunk = function (callback) {
     if (syncIndex === -1) return callback();
 
     // read header behind sync bytes and read telegram length
-    const header = intBuffer.readUInt8(syncIndex + syncBytes.length);
-    const telegramLength = header & 0x1f;
+	try {
+        const header = intBuffer.readUInt8(syncIndex + syncBytes.length);
+        const telegramLength = header & 0x1f;
 
-    // slice complete telegramm
-    const lengthSyncAndHeader = syncBytes.length + 1;
-    if (this.intBuffer.length >= syncIndex + lengthSyncAndHeader + telegramLength) {
-        const processingBuffer = intBuffer.slice(syncIndex, telegramLength + lengthSyncAndHeader);
-        const parsed = enocean(processingBuffer);
-        callback(null, parsed);
-        intBuffer = intBuffer.slice(syncIndex + telegramLength + lengthSyncAndHeader, intBuffer.length);
-        processChunk(callback);
-    } else {
-        return callback();
-    }
+        // slice complete telegramm
+        const lengthSyncAndHeader = syncBytes.length + 1;
+        if (intBuffer.length >= syncIndex + lengthSyncAndHeader + telegramLength) {
+            const processingBuffer = intBuffer.slice(syncIndex, telegramLength + lengthSyncAndHeader);
+            const parsed = enocean(processingBuffer);
+            callback(null, parsed);
+            intBuffer = intBuffer.slice(syncIndex + telegramLength + lengthSyncAndHeader, intBuffer.length);
+            processChunk(callback);
+        } else {
+            return callback();
+        }
+    } catch(e) {
+	    return callback(e);
+	}
 };
 
 module.exports = function (RED) {
@@ -34,24 +38,26 @@ module.exports = function (RED) {
             if (err) {
                 return RED.log.error(`enocean-esp2 error: ${err}`);
             }
-            const msg = {
-                payload: result
-            };
-            node.send(msg);
+            if (result ) {
+                const msg = {
+                    payload: result
+                };
+                return node.send(msg);
+            }
         }
 
         RED.nodes.createNode(this, config);
         const node = this;
 
         node.enoceanDatasource = RED.nodes.getNode(config.datasource);
-        if (node.enoceanenoceanDatasource) {
+        if (node.enoceanDatasource) {
             const options = {
-                'transportSerialPort': node.enoceanenoceanDatasource.serialport,
-                'transportSerialBaudrate': node.enoceanenoceanDatasource.serialbaud,
-                'transportSerialDataBits': node.enoceanenoceanDatasource.databits,
-                'transportSerialStopBits': node.enoceanenoceanDatasource.stopbits,
-                'transportSerialParity': node.enoceanenoceanDatasource.parity,
-                'transportLocalFilePath': node.enoceanenoceanDatasource.filepath
+                'transportSerialPort': node.enoceanDatasource.serialport,
+                'transportSerialBaudrate': node.enoceanDatasource.serialbaud,
+                'transportSerialDataBits': node.enoceanDatasource.databits,
+                'transportSerialStopBits': node.enoceanDatasource.stopbits,
+                'transportSerialParity': node.enoceanDatasource.parity,
+                'transportLocalFilePath': node.enoceanDatasource.filepath
             };
 
             const port = new serialport(options.transportSerialPort, {
@@ -59,13 +65,13 @@ module.exports = function (RED) {
             });
 
             port.on('error', function (err) {
-                RED.log.error(`enocean-esp2 error: ${err.message}`);
+                return RED.log.error(`enocean-esp2 error: serialport: {err}`);
             });
 
             port.on('data', function (data) {
                 const totalLength = intBuffer.length + data.length;
-                this.intBuffer = Buffer.concat([this.intBuffer, data], totalLength);
-                this.processChunk(sendData);
+                intBuffer = Buffer.concat([intBuffer, data], totalLength);
+                processChunk(sendData);
             });
 
             node.on('close', function () {
