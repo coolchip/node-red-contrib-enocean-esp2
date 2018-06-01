@@ -86,15 +86,16 @@ module.exports = function (RED) {
                     text: 'node-red:common.status.not-connected'
                 });
             });
-
-            node.on('close', function (done) {
-                if (node.enoceanDatasource) {
-                    serialPool.close(node.enoceanDatasource.serialport, done);
-                } else {
-                    done();
-                }
-            });
+        } else {
+            this.error(RED._('enocean-esp2.errors.missing-conf'));
         }
+        node.on('close', function (done) {
+            if (node.enoceanDatasource) {
+                serialPool.close(node.enoceanDatasource.serialport, done);
+            } else {
+                done();
+            }
+        });
     }
     RED.nodes.registerType('enocean-esp2 in', EnoceanEsp2InNode);
 
@@ -152,7 +153,7 @@ module.exports = function (RED) {
                 });
             });
         } else {
-            this.error(RED._('serial.errors.missing-conf'));
+            this.error(RED._('enocean-esp2.errors.missing-conf'));
         }
 
         this.on('close', function (done) {
@@ -201,7 +202,7 @@ module.exports = function (RED) {
                                 if (err) {
                                     if (err.toString() !== olderr) {
                                         olderr = err.toString();
-                                        RED.log.error(RED._('serial.errors.error', {
+                                        RED.log.error(RED._('enocean-esp2.errors.error', {
                                             port: port,
                                             error: olderr
                                         }));
@@ -212,7 +213,7 @@ module.exports = function (RED) {
                                 }
                             });
                             obj.serial.on('error', function (err) {
-                                RED.log.error(RED._('serial.errors.error', {
+                                RED.log.error(RED._('enocean-esp2.errors.error', {
                                     port: port,
                                     error: err.toString()
                                 }));
@@ -223,7 +224,7 @@ module.exports = function (RED) {
                             });
                             obj.serial.on('close', function () {
                                 if (!obj._closing) {
-                                    RED.log.error(RED._('serial.errors.unexpected-close', {
+                                    RED.log.error(RED._('enocean-esp2.errors.unexpected-close', {
                                         port: port
                                     }));
                                     obj._emitter.emit('closed');
@@ -234,7 +235,7 @@ module.exports = function (RED) {
                             });
                             obj.serial.on('open', function () {
                                 olderr = '';
-                                RED.log.info(RED._('serial.onopen', {
+                                RED.log.info(RED._('enocean-esp2.onopen', {
                                     port: port,
                                     baud: baud,
                                     config: databits + '' + parity.charAt(0).toUpperCase() + stopbits
@@ -248,7 +249,7 @@ module.exports = function (RED) {
                                 obj._emitter.emit('data', d);
                             });
                             obj.serial.on('disconnect', function () {
-                                RED.log.error(RED._('serial.errors.disconnected', {
+                                RED.log.error(RED._('enocean-esp2.errors.disconnected', {
                                     port: port
                                 }));
                             });
@@ -267,7 +268,7 @@ module.exports = function (RED) {
                     connections[port]._closing = true;
                     try {
                         connections[port].close(function () {
-                            RED.log.info(RED._('serial.errors.closed', {
+                            RED.log.info(RED._('enocean-esp2.errors.closed', {
                                 port: port
                             }));
                             done();
