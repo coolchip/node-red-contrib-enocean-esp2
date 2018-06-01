@@ -14,7 +14,7 @@ module.exports = function (RED) {
     }
     RED.nodes.registerType('enocean-esp2-connection', EnoceanEsp2ConnectionNode);
 
-    RED.httpAdmin.get('/serialports', RED.auth.needsPermission('serial.read'), function (req, res) {
+    RED.httpAdmin.get('/enoceanesp2ports', RED.auth.needsPermission('serial.read'), function (req, res) {
         const serialport = require('serialport');
         serialport.list(function (err, ports) {
             if (err) return RED.log.error(err);
