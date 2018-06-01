@@ -17,7 +17,7 @@ module.exports = function (RED) {
     RED.httpAdmin.get('/serialports', RED.auth.needsPermission('serial.read'), function (req, res) {
         const serialport = require('serialport');
         serialport.list(function (err, ports) {
-            if (err) return console.log(err);
+            if (err) return RED.log.error(err);
             res.json(ports);
         });
     });

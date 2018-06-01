@@ -12,7 +12,7 @@ const processChunk = function (callback) {
     if (syncIndex === -1) return callback();
 
     // read header behind sync bytes and read telegram length
-	try {
+    try {
         const header = intBuffer.readUInt8(syncIndex + syncBytes.length);
         const telegramLength = header & 0x1f;
 
@@ -27,9 +27,9 @@ const processChunk = function (callback) {
         } else {
             return callback();
         }
-    } catch(e) {
-	    return callback(e);
-	}
+    } catch (e) {
+        return callback(e);
+    }
 };
 
 module.exports = function (RED) {
@@ -38,7 +38,7 @@ module.exports = function (RED) {
             if (err) {
                 return RED.log.error(`enocean-esp2 error: ${err}`);
             }
-            if (result ) {
+            if (result) {
                 const msg = {
                     payload: result
                 };
@@ -65,7 +65,7 @@ module.exports = function (RED) {
             });
 
             port.on('error', function (err) {
-                return RED.log.error(`enocean-esp2 error: serialport: {err}`);
+                return RED.log.error(`enocean-esp2 error: serialport: ${err}`);
             });
 
             port.on('data', function (data) {
