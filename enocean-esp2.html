@@ -1,8 +1,8 @@
-<script type="text/x-red" data-help-name="enocean-esp2">
+<script type="text/x-red" data-help-name="enocean-esp2 in">
     <p>Node to provide data from enocean-esp2</p>
 </script>
 
-<script type="text/x-red" data-template-name="enocean-esp2">
+<script type="text/x-red" data-template-name="enocean-esp2 in">
     <div class="form-row">
         <label for="node-input-datasource">
             <i class="fa fa-random"></i>
@@ -20,7 +20,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType("enocean-esp2", {
+    RED.nodes.registerType("enocean-esp2 in", {
         category: "input",
         color: "#3FADB5",
         defaults: {
@@ -36,7 +36,53 @@
         outputs: 1,
         icon: "bridge-dash.png",
         label: function () {
-            return this.name || "enocean-esp2";
+            return this.name || "esp2";
+        },
+        labelStyle: function () {
+            return this.name ? "node_label_italic" : "";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-help-name="enocean-esp2 out">
+    <p>Node to transmit data to enocean-esp2 equipment</p>
+</script>
+
+<script type="text/x-red" data-template-name="enocean-esp2 out">
+    <div class="form-row">
+        <label for="node-input-datasource">
+            <i class="fa fa-random"></i>
+            <span data-i18n="enocean-esp2.label.datasource"></span>
+        </label>
+        <input type="text" id="node-input-datasource">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name">
+            <i class="fa fa-tag"></i>
+            <span data-i18n="node-red:common.label.name"></span>
+        </label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]node-red:common.label.name">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType("enocean-esp2 out", {
+        category: "output",
+        color: "#3FADB5",
+        defaults: {
+            name: {
+                name: ""
+            },
+            datasource: {
+                type: "enocean-esp2-connection",
+                required: true
+            }
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "bridge-dash.png",
+        label: function () {
+            return this.name || "esp2";
         },
         labelStyle: function () {
             return this.name ? "node_label_italic" : "";
