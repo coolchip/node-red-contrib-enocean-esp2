@@ -14,11 +14,15 @@ const processChunk = function (callback) {
 
     // read header behind sync bytes and read telegram length
     try {
+        const lengthSyncAndHeader = syncBytes.length + 1;
+        if (intBuffer.length < syncIndex + lengthSyncAndHeader) {
+            // not enough data (no header)
+            return callback();
+        }
         const header = intBuffer.readUInt8(syncIndex + syncBytes.length);
         const telegramLength = header & 0x1f;
 
         // slice complete telegramm
-        const lengthSyncAndHeader = syncBytes.length + 1;
         if (intBuffer.length >= syncIndex + lengthSyncAndHeader + telegramLength) {
             const processingBuffer = intBuffer.slice(syncIndex, telegramLength + lengthSyncAndHeader);
             const parsed = enocean(processingBuffer);
@@ -26,10 +30,11 @@ const processChunk = function (callback) {
             intBuffer = intBuffer.slice(syncIndex + telegramLength + lengthSyncAndHeader, intBuffer.length);
             processChunk(callback);
         } else {
+            // not enough data (payload missing)
             return callback();
         }
     } catch (e) {
-        return callback(e);
+        return callback(new Error(`Index Error! chunkLength: ${intBuffer.length} syncBytes at: ${syncIndex}`));
     }
 };
 
