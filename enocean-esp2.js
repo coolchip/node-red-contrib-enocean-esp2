@@ -34,7 +34,8 @@ const processChunk = function (callback) {
             return callback();
         }
     } catch (e) {
-        return callback(new Error(`Index Error! chunkLength: ${intBuffer.length} syncBytes at: ${syncIndex}`));
+        callback(new Error(`Index Error! chunkLength: ${intBuffer.length} syncBytes at: ${syncIndex}`));
+        intBuffer = Buffer.alloc(0);
     }
 };
 
