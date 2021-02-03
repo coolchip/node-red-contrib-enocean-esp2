@@ -5,7 +5,7 @@
   "main": "enocean-esp2.js",
   "dependencies": {
     "enocean-esp2": "0.0.3",
-    "serialport": "^8.0.6"
+    "serialport": "^9.0.6"
   },
   "keywords": [
     "node-red",
