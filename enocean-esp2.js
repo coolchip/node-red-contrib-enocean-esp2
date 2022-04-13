@@ -1,7 +1,7 @@
 'use strict';
 
 const enocean = require('enocean-esp2');
-const serialport = require('serialport');
+const { SerialPort } = require('serialport');
 const events = require('events');
 
 const syncBytes = Buffer.from([0xa5, 0x5a]);
@@ -197,12 +197,12 @@ module.exports = function (RED) {
                         };
                         let olderr = '';
                         const setupSerial = function () {
-                            obj.serial = new serialport(port, {
+                            obj.serial = new serialport({
+                                path: port,
                                 baudRate: baud,
                                 dataBits: databits,
                                 parity: parity,
                                 stopBits: stopbits,
-                                //parser: serialp.parsers.raw,
                                 autoOpen: true
                             }, function (err) {
                                 if (err) {
