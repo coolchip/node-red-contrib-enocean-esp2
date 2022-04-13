@@ -4,7 +4,7 @@
   "description": "Node, that reads data from enocean serial bus 2 (f.e. eltako) and parses values",
   "main": "enocean-esp2.js",
   "dependencies": {
-    "enocean-esp2": "^0.0.4",
+    "enocean-esp2": "^0.0.5",
     "serialport": "^10.4.0"
   },
   "keywords": [
