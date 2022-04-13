@@ -197,7 +197,7 @@ module.exports = function (RED) {
                         };
                         let olderr = '';
                         const setupSerial = function () {
-                            obj.serial = new serialport({
+                            obj.serial = new SerialPort({
                                 path: port,
                                 baudRate: baud,
                                 dataBits: databits,
