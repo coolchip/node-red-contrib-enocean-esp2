@@ -120,7 +120,7 @@ module.exports = function (RED) {
             node.addCh = '';
 
             node.on('input', function (msg) {
-                if (msg.hasOwnProperty('payload')) {
+                if (Object.prototype.hasOwnProperty.call(msg, 'payload')) {
                     let payload = msg.payload;
                     if (!Buffer.isBuffer(payload)) {
                         if (typeof payload === 'object') {
